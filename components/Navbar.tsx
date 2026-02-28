@@ -7,7 +7,7 @@ export default function Navbar() {
       <div className="max-w-5xl mx-auto flex justify-between items-center">
         <Link
           href="/"
-          className="text-xl serif font-bold tracking-tight text-stone-900"
+          className="text-xl font-serif font-bold tracking-tight text-stone-900"
         >
           Crafted Thoughts
         </Link>
