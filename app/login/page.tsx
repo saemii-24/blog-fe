@@ -1,0 +1,144 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { ArrowLeft, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+
+type LoginFormValues = {
+  username: string;
+  password: string;
+};
+
+export default function LoginPage() {
+  const router = useRouter();
+  const [submitting, setSubmitting] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    defaultValues: { username: "", password: "" },
+    mode: "onSubmit",
+  });
+
+  const onSubmit = async (values: LoginFormValues) => {};
+
+  return (
+    <div className="min-h-screen bg-white">
+      <div className="max-w-3xl mx-auto px-6 py-20">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-stone-400 hover:text-stone-900 transition-colors mb-16 group"
+        >
+          <ArrowLeft
+            size={16}
+            className="group-hover:-translate-x-1 transition-transform"
+          />
+          <span className="text-[10px] font-bold uppercase tracking-widest">
+            Back to Journal
+          </span>
+        </Link>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <h2 className="text-5xl font-serif font-medium mb-16 text-stone-900">
+            Sign In
+          </h2>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-12">
+            {/* Username */}
+            <div className="space-y-4">
+              <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400">
+                Username
+              </label>
+
+              <input
+                type="text"
+                placeholder="Enter your username..."
+                className="w-full text-2xl serif border-none focus:ring-0 outline-none py-2 transition-colors placeholder:text-stone-100 text-stone-900"
+                autoComplete="username"
+                {...register("username", {
+                  required: "Username is required.",
+                  minLength: {
+                    value: 2,
+                    message: "Please enter at least 2 characters.",
+                  },
+                })}
+              />
+
+              {errors.username?.message && (
+                <p className="text-xs text-rose-500 tracking-wide">
+                  {errors.username.message}
+                </p>
+              )}
+            </div>
+
+            {/* Password */}
+            <div className="space-y-4">
+              <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400">
+                Password
+              </label>
+
+              <input
+                type="password"
+                placeholder="Enter your password..."
+                className="w-full py-4 border-b border-stone-100 focus:border-stone-900 outline-none transition-colors text-sm placeholder:text-stone-200"
+                autoComplete="current-password"
+                {...register("password", {
+                  required: "Password is required.",
+                  minLength: {
+                    value: 4,
+                    message: "Please enter at least 4 characters.",
+                  },
+                })}
+              />
+
+              {errors.password?.message && (
+                <p className="text-xs text-rose-500 tracking-wide">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+
+            {/* Server error */}
+            {serverError && (
+              <div className="border border-stone-100 rounded-md p-4">
+                <p className="text-sm text-stone-600 leading-relaxed">
+                  {serverError}
+                </p>
+              </div>
+            )}
+
+            <div className="pt-12 flex flex-col gap-4">
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full md:w-auto px-12 bg-stone-900 text-white py-4 rounded-md font-bold text-sm uppercase tracking-widest hover:bg-stone-800 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+              >
+                {submitting ? (
+                  <Loader2 className="animate-spin" size={18} />
+                ) : (
+                  "Sign In"
+                )}
+              </button>
+
+              <p className="text-xs text-stone-400 tracking-wide">
+                처음 방문하시나요?{" "}
+                <Link href="/signup" className="text-stone-900 hover:underline">
+                  계정 만들기
+                </Link>
+              </p>
+            </div>
+          </form>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
