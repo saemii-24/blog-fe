@@ -1,3 +1,4 @@
+// app/create/page.tsx
 "use client";
 
 import Link from "next/link";
@@ -59,7 +60,7 @@ export default function CreatePage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h2 className="text-5xl font-serif font-medium mb-16 text-stone-900">
+          <h2 className="text-5xl serif font-medium mb-16 text-stone-900">
             New Story
           </h2>
 

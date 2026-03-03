@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import useSignup from "@/query/useSignup";
 
 type SignupFormValues = {
   username: string;
@@ -14,9 +15,7 @@ type SignupFormValues = {
 };
 
 export default function SignupPage() {
-  const router = useRouter();
-  const [submitting, setSubmitting] = useState(false);
-  const [serverError, setServerError] = useState<string | null>(null);
+  const { signUpAsync, isError, isPending } = useSignup();
 
   const {
     register,
@@ -30,8 +29,18 @@ export default function SignupPage() {
 
   const password = watch("password");
 
-  const onSubmit = async (values: SignupFormValues) => {};
-
+  const onSubmit = async (values: SignupFormValues) => {
+    try {
+      await signUpAsync({
+        username: values.username,
+        password: values.password,
+      });
+    } catch (e) {
+      console.error("Failed to create post", e);
+      alert("Failed to create post. Please try again.");
+      return;
+    }
+  };
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-3xl mx-auto px-6 py-20">
@@ -134,10 +143,10 @@ export default function SignupPage() {
             </div>
 
             {/* Server error */}
-            {serverError && (
+            {isError && (
               <div className="border border-stone-100 rounded-md p-4">
                 <p className="text-sm text-stone-600 leading-relaxed">
-                  {serverError}
+                  {isError}
                 </p>
               </div>
             )}
@@ -145,10 +154,10 @@ export default function SignupPage() {
             <div className="pt-12 flex flex-col gap-4">
               <button
                 type="submit"
-                disabled={submitting}
+                disabled={isPending}
                 className="w-full md:w-auto px-12 bg-stone-900 text-white py-4 rounded-md font-bold text-sm uppercase tracking-widest hover:bg-stone-800 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
               >
-                {submitting ? (
+                {isPending ? (
                   <Loader2 className="animate-spin" size={18} />
                 ) : (
                   "Create Account"

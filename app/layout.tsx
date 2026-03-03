@@ -2,6 +2,7 @@ import "./globals.css";
 import { Noto_Sans_KR, Playfair_Display } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Providers from "@/components/Provider";
 
 const noto = Noto_Sans_KR({
   subsets: ["latin"],
@@ -25,11 +26,15 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${noto.variable} ${playfair.variable}`}>
       <body className="font-sans">
-        <div className="min-h-screen flex flex-col">
-          <Navbar />
-          <main className="flex-grow">{children}</main>
-          <Footer />
-        </div>
+        {" "}
+        <Providers>
+          <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <main className="grow">{children}</main>
+            <Footer />
+          </div>
+          <Toaster />
+        </Providers>{" "}
       </body>
     </html>
   );
