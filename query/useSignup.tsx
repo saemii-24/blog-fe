@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 
 type signUpPayload = { username: string; password: string };
 type signUpResponse = { access_token: string; token_type: string };
+
 async function signUpApi(payload: signUpPayload): Promise<signUpResponse> {
   const res = await fetch("/api/signUp", {
     method: "POST",
@@ -13,7 +14,7 @@ async function signUpApi(payload: signUpPayload): Promise<signUpResponse> {
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(text || "회원가입 실패");
+    throw new Error(text || "회원가입에 실패했습니다.");
   }
 
   return res.json();

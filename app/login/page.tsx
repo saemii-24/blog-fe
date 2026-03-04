@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import useLogin from "@/query/useLogin";
 
 type LoginFormValues = {
   username: string;
@@ -13,7 +14,7 @@ type LoginFormValues = {
 };
 
 export default function LoginPage() {
-  const router = useRouter();
+  const { loginAsync, isError, isPending } = useLogin();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -26,7 +27,18 @@ export default function LoginPage() {
     mode: "onSubmit",
   });
 
-  const onSubmit = async (values: LoginFormValues) => {};
+  const onSubmit = async (values: LoginFormValues) => {
+    try {
+      await loginAsync({
+        username: values.username,
+        password: values.password,
+      });
+    } catch (e) {
+      console.error("Failed to login", e);
+      alert("Failed to login. Please try again.");
+      return;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">

@@ -1,33 +1,35 @@
-import { useQuery } from "@tanstack/react-query";
+"use client";
 
-type UseLoginParams = {
-  enabled?: boolean;
-};
+import { useMutation } from "@tanstack/react-query";
 
-const fetchList = async (): Promise<ListItem[]> => {
-  const response = await fetch("/api/login");
+type loginPayload = { username: string; password: string };
+type loginResponse = { access_token: string; token_type: string };
 
-  if (!response.ok) {
-    throw new Error("데이터를 불러올 수 없습니다.");
+async function loginApi(payload: loginPayload): Promise<loginResponse> {
+  const res = await fetch("/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(text || "로그인에 실패했습니다.");
   }
-  return response.json();
-};
 
-const useLogin = (params?: UseLoginParams) => {
-  const enabled = params?.enabled ?? true;
+  return res.json();
+}
 
-  const query = useQuery<ListItem[], Error>({
-    queryKey: ["login"],
-    queryFn: fetchList,
-    enabled,
+export default function useLogin() {
+  const mutation = useMutation<loginResponse, Error, loginPayload>({
+    mutationKey: ["login"],
+    mutationFn: loginApi,
     retry: 0,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
   });
 
   return {
-    ...query,
+    ...mutation,
+    login: mutation.mutate,
+    loginAsync: mutation.mutateAsync,
   };
-};
-
-export default useLogin;
+}

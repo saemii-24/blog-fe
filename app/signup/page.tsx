@@ -36,8 +36,8 @@ export default function SignupPage() {
         password: values.password,
       });
     } catch (e) {
-      console.error("Failed to create post", e);
-      alert("Failed to create post. Please try again.");
+      console.error("Failed to signup", e);
+      alert("Failed to signup. Please try again.");
       return;
     }
   };
