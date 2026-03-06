@@ -3,6 +3,7 @@ import { Noto_Sans_KR, Playfair_Display } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Providers from "@/components/Provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const noto = Noto_Sans_KR({
   subsets: ["latin"],
@@ -34,7 +35,7 @@ export default function RootLayout({
             <Footer />
           </div>
           <Toaster />
-        </Providers>{" "}
+        </Providers>
       </body>
     </html>
   );
